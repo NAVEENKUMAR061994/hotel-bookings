@@ -1,16 +1,33 @@
+@booking
 Feature: Retrieve Booking Details
+  As a user
+  User wants to view booking details
+  So that reservation can be verified
 
   Background:
-    Given the booking system is available
+    Given the booking system is accessible
 
-  Scenario Outline: Retrieve bookings with different room conditions
-    Given a <room_condition>
-    When the user retrieves booking details
-    Then the <outcome> should be observed
+  @positive
+  Scenario Outline: Retrieve valid booking
+    Given booking id "<bookingId>"
+    When the user requests booking details
+    Then booking information should be returned
 
     Examples:
-      | room_condition         | outcome                        |
-      | valid room id          | request should be successful   |
-      | room with no bookings  | request should be successful   |
-      | invalid room id        | request should fail            |
-      | very large room id     | system should respond appropriately |
+      | bookingId |
+      | 1         |
+      | 2         |
+
+  @negative
+  Scenario Outline: Retrieve invalid booking
+    Given booking id "<bookingId>"
+    When the user requests booking details
+    Then booking should not be returned
+    And message "<message>" should be shown
+
+    Examples:
+      | bookingId | message|
+      | -1        | []     |
+      | 0         | []     |
+      | abc       | []     |
+      | 9999      | []     |

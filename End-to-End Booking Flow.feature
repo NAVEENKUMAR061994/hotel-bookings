@@ -1,22 +1,31 @@
-Feature: End-to-End Booking Flow
+@e2e
+Feature: Complete Booking Flow
+  As a user
+  User wants to complete full booking journey
+  So that reservation lifecycle is managed
 
   Background:
-    Given the booking system is available
-    And valid test data is prepared
+    Given system is accessible
+    And valid credentials are available
 
-  Scenario: Complete booking lifecycle
-
-    When the user views available rooms
+  @positive
+  Scenario: Complete flow successfully
+    When the user views rooms
     And selects a room
+    And creates booking
+    Then booking should be created
 
-    And creates a booking
-    Then the booking should be created successfully
+    When booking is retrieved
+    Then details should be visible
 
-    When the user views booking details
-    Then the booking should be visible
+    When booking is updated
+    Then updated data should be saved
 
-    When the user updates the booking
-    Then the updated details should be reflected
+    When booking is deleted
+    Then booking should not exist
 
-    When the user deletes the booking
-    Then the booking should no longer exist
+  @negative
+  Scenario: Attempt flow without authentication
+    Given user is not authenticated
+    When booking operations are attempted
+    Then access should be denied
